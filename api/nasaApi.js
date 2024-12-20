@@ -1,20 +1,17 @@
-import React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
-import HomeScreen from './screens/HomeScreen'; 
-import ImageDetailScreen from './screens/ImageDetailScreen'; 
+import axios from 'axios';
 
-const Stack = createStackNavigator();
+const baseURL = 'https://images-api.nasa.gov/search';
 
-const App = () => {
-  return (
-    <NavigationContainer>
-      <Stack.Navigator initialRouteName="Home">
-        <Stack.Screen name="Home" component={HomeScreen} />
-        <Stack.Screen name="ImageDetail" component={ImageDetailScreen} />
-      </Stack.Navigator>
-    </NavigationContainer>
-  );
+export const fetchImages = async (query = 'earth', page = 1) => {
+  try {
+    const response = await axios.get(baseURL, {
+      params: {
+        q: query,
+        page: page,
+      },
+    });
+    return response.data.collection.items;
+  } catch (error) {
+    console.error('Erro ao buscar imagens:', error);
+  }
 };
-
-export default App;
